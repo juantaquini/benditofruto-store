@@ -56,7 +56,7 @@ export default function CartPreview() {
                     onClick={() => removeItem(item.node.id)}
                     className="text-xs text-foreground hover:text-red-600 transition-colors mt-1 text-left uppercase tracking-wider cursor-pointer"
                   >
-                    REMOVE
+                    ELIMINAR
                   </button>
                   <div className="flex items-center border border-foreground w-fit">
                     <button
@@ -104,7 +104,7 @@ export default function CartPreview() {
         onClick={() => (window.location.href = checkoutUrl!)}
         className="w-full bg-foreground hover:bg-[#1f2a6b] text-white py-3 text-sm font-medium uppercase tracking-wider transition-colors cursor-pointer"
       >
-        CHECKOUT
+        FINALIZAR COMPRA
       </button>
     </div>
   );

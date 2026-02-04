@@ -149,6 +149,9 @@ export async function getProductByHandle(handle: string) {
       };
       customDimensions: { value: string } | null;
       customCareInstructions: { value: string } | null;
+      collections: {
+        edges: { node: { handle: string } }[];
+      };
     } | null;
   }>({
     query: `
@@ -190,6 +193,13 @@ export async function getProductByHandle(handle: string) {
           }
           customCareInstructions: metafield(namespace: "custom", key: "care_instructions") {
             value
+          }
+          collections(first: 1) {
+            edges {
+              node {
+                handle
+              }
+            }
           }
         }
       }

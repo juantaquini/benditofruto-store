@@ -130,7 +130,7 @@ export default function Header() {
               Sobre nosotros
             </Link>
             <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
-              Contact
+              Contacto
             </Link>
           </nav>
         </Container>

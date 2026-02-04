@@ -1,11 +1,14 @@
-import { getProductByHandle } from "@/lib/shopify";
+import { getProductByHandle, getCollectionByHandle } from "@/lib/shopify";
 import Container from "@/components/ui/Container";
 import AddToCartButton from "@/components/cart/AddToCartButton";
+import ProductCard from "@/components/products/ProductCard";
 import Image from "next/image";
 
 type Props = {
   params: Promise<{ handle: string }>;
 };
+
+const RELATED_COUNT = 4;
 
 export default async function ProductPage({ params }: Props) {
   const { handle } = await params;
@@ -15,6 +18,16 @@ export default async function ProductPage({ params }: Props) {
 
   if (!product) {
     return <div>Producto no encontrado</div>;
+  }
+
+  const collectionHandle = product.collections?.edges?.[0]?.node?.handle;
+  let relatedProducts: { node: { id: string; title: string; handle: string; descriptionHtml: string; tags: string[]; priceRange: { minVariantPrice: { amount: string; currencyCode: string } }; images: { edges: { node: { url: string; altText: string | null; width: number; height: number } }[] } } }[] = [];
+  if (collectionHandle) {
+    const collectionData = await getCollectionByHandle(collectionHandle);
+    const allInCollection = collectionData?.collection?.products?.edges ?? [];
+    relatedProducts = allInCollection
+      .filter(({ node }) => node.id !== product.id)
+      .slice(0, RELATED_COUNT);
   }
 
   return (
@@ -84,7 +97,7 @@ export default async function ProductPage({ params }: Props) {
             />
             {product.customCareInstructions?.value && (
               <div className="prose text-foreground text-neutral-600">
-                <h2 className="text-base font-medium">Care Instructions</h2>
+                <h2 className="text-base font-medium">Cuidados Básicos</h2>
                 {product.customCareInstructions.value
                   .split(".")
                   .filter((sentence) => sentence.trim() !== "")
@@ -95,6 +108,19 @@ export default async function ProductPage({ params }: Props) {
             )}
           </div>
         </div>
+
+        {relatedProducts.length > 0 && (
+          <section className="mt-16 pt-12 border-t border-neutral-200">
+            <h2 className="text-lg font-medium uppercase tracking-wider text-foreground mb-8 text-center">
+              También te puede interesar
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-10 justify-items-center">
+              {relatedProducts.map(({ node }) => (
+                <ProductCard key={node.id} product={node} />
+              ))}
+            </div>
+          </section>
+        )}
       </Container>
     </div>
   );

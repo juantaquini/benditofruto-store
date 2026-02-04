@@ -67,11 +67,11 @@ export default function CartItem({ item }: { item: any }) {
             {/* Dynamic stock messages */}
             {remaining <= 0 ? (
               <span className="text-xs text-red-600">
-                No more stock available
+                No hay stock disponible
               </span>
             ) : remaining <= 5 ? (
               <span className="text-xs text-yellow-600">
-                Only {remaining} unit{remaining > 1 ? "s" : ""} left
+                Solo {remaining} unidad{remaining > 1 ? "es" : ""} restantes
               </span>
             ) : null}
 
@@ -79,7 +79,7 @@ export default function CartItem({ item }: { item: any }) {
               onClick={handleRemove}
               className="text-xs uppercase tracking-wider text-left text-foreground hover:text-black transition-colors w-fit cursor-pointer"
             >
-              Remove
+              ELIMINAR
             </button>
           </div>
 

@@ -8,9 +8,9 @@ export default function AddToCartButton({ variantId }: { variantId: string }) {
   return (
     <button
       onClick={() => addItem(variantId)}
-      className="bg-foreground px-4 py-1 text-white cursor-pointer"
+      className="bg-foreground px-4 py-1 text-white cursor-pointer w-full"
     >
-        ADD TO CART
+      AGREGAR AL CARRITO
     </button>
   );
 }
