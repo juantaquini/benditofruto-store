@@ -80,9 +80,29 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (!cartId) return;
 
     const data = await getCart(cartId);
-    setLines(data.cart.lines.edges);
-    setTotalQuantity(data.cart.totalQuantity);
-    setCheckoutUrl(data.cart.checkoutUrl);
+
+    // Cart can be null if it expired or was deleted (e.g. after ~2 weeks inactive)
+    if (!data.cart) {
+      localStorage.removeItem("cartId");
+      setLines([]);
+      setTotalQuantity(0);
+      setCheckoutUrl(null);
+      try {
+        const newCart = await createCart();
+        const id = newCart.cartCreate.cart.id;
+        const url = newCart.cartCreate.cart.checkoutUrl;
+        localStorage.setItem("cartId", id);
+        setCartId(id);
+        setCheckoutUrl(url);
+      } catch {
+        setCartId(null);
+      }
+      return;
+    }
+
+    setLines(data.cart.lines?.edges ?? []);
+    setTotalQuantity(data.cart.totalQuantity ?? 0);
+    setCheckoutUrl(data.cart.checkoutUrl ?? null);
   }
 
   /* ------------------------------ ADD ITEM ------------------------------- */

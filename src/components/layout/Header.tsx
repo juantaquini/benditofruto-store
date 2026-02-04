@@ -56,22 +56,17 @@ export default function Header() {
                 z-40
               "
             >
-              BENDITOFRUTO
+              Bendito Fruto
             </Link>
-
-            {/* Desktop nav */}
             <nav className="hidden flex-1 justify-center md:flex">
               <Link className="px-4 py-2 font-medium" href="/collections">
-                Gallery
-              </Link>
-              <Link className="px-4 py-2 font-medium" href="/exhibitions">
-                Exhibitions
-              </Link>
-              <Link className="px-4 py-2 font-medium" href="/draw">
-                Create a drawing
+                Work
               </Link>
               <Link className="px-4 py-2 font-medium" href="/about">
                 About
+              </Link>
+              <Link className="px-4 py-2 font-medium" href="/contact">
+                Contact
               </Link>
             </nav>
 
@@ -83,10 +78,7 @@ export default function Header() {
                 onMouseLeave={handleMouseLeave}
               >
                 <Link href="/cart" className="relative block">
-                  <ShoppingBagIcon
-                    className="h-6 w-6 text-foreground"
-              
-                  />
+                  <ShoppingBagIcon className="h-6 w-6 text-foreground" />
                   {totalQuantity > 0 && (
                     <span className="absolute -right-1 -top-4 text-xs">
                       {totalQuantity}
