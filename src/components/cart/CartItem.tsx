@@ -26,13 +26,14 @@ export default function CartItem({ item }: { item: any }) {
 
   return (
     <div className="flex gap-4 py-4 border-b border-foreground">
-      <Image
-        src={variant.image?.url}
-        alt={variant.image?.altText || variant.product.title}
-        width={96}
-        height={96}
-        className="h-34 w-34 object-contain"
-      />
+      <div className="relative w-24 h-24 flex-shrink-0 bg-white border border-neutral-200 overflow-hidden">
+        <Image
+          src={variant.image?.url}
+          alt={variant.image?.altText || variant.product.title}
+          fill
+          className="object-contain"
+        />
+      </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center flex-1">
         <div className="flex justify-between items-start">

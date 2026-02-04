@@ -27,12 +27,12 @@ export default function CartPreview() {
           return (
             <div key={item.node.id} className="flex gap-3 py-3">
               {/* Product Image */}
-              <div className="relative w-20 h-20 flex-shrink-0 bg-gray-100">
+              <div className="relative w-20 h-20 flex-shrink-0 bg-white border border-neutral-200">
                 <Image
                   src={variant.image?.url || "/placeholder.png"}
                   alt={variant.product.title}
                   fill
-                  className="h-34 w-34 object-contain"
+                  className="object-contain"
                 />
               </div>
 

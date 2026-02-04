@@ -10,14 +10,15 @@ export default function ProductCard({ product }: Props) {
   const image = product.images.edges[0]?.node;
 
   return (
-    <Link href={`/products/${product.handle}`} className="group inline-block">
-      <div className="bg-neutral-100 inline-block">
+    <Link href={`/products/${product.handle}`} className="group inline-block w-full">
+      <div className="relative aspect-square w-full bg-white overflow-hidden">
         {image && (
           <Image
             src={image.url}
             alt={image.altText ?? product.title}
-            width={image.width}
-            height={image.height}
+            fill
+            className="object-contain"
+            sizes="(max-width: 640px) 50vw, 33vw"
           />
         )}
       </div>

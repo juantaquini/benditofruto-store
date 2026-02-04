@@ -24,15 +24,14 @@ export default async function ProductPage({ params }: Props) {
           {product.images.edges.map(({ node }) => (
             <div
               key={node.url}
-              className="relative shrink-0 w-full md:w-auto h-full snap-center"
+              className="relative shrink-0 w-full md:w-[min(70vh,600px)] aspect-square md:aspect-square max-h-[85vh] bg-white snap-center flex items-center justify-center"
             >
               <Image
                 src={node.url}
                 alt={node.altText ?? product.title}
-                width={node.width ?? 1200}
-                height={node.height ?? 800}
-                sizes="100vw"
-                className="h-full w-full md:w-auto object-contain"
+                fill
+                sizes="(max-width: 768px) 100vw, 600px"
+                className="object-contain p-2"
               />
             </div>
           ))}

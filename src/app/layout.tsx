@@ -21,7 +21,11 @@ export const metadata: Metadata = {
   description:
     "Original watercolor artworks inspired by landscapes and travel. Contemporary artist-created art.",
   icons: {
-    icon: "/images/taco-p5/TACO_005.png",
+    icon: [
+      { url: "/images/favicon.svg" },
+      { url: "/images/favicon.svg", media: "(prefers-color-scheme: light)" },
+      { url: "/images/favicon-dark.svg", media: "(prefers-color-scheme: dark)" },
+    ],
   },
 };
 

@@ -34,14 +34,14 @@ export default function Header() {
           <div className="flex h-16 items-center justify-between relative">
             {/* Mobile menu button */}
             <button
-              className="md:hidden relative z-50"
+              className="md:hidden relative z-50 p-2 -m-2 touch-manipulation"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? (
-                <XMarkIcon className="h-6 w-6 text-foreground transition-transform duration-300 cursor-pointer" />
+                <XMarkIcon className="h-8 w-8 text-foreground transition-transform duration-300 cursor-pointer" />
               ) : (
-                <Bars3Icon className="h-6 w-6 text-foreground transition-transform duration-300 cursor-pointer" />
+                <Bars3Icon className="h-8 w-8 text-foreground transition-transform duration-300 cursor-pointer" />
               )}
             </button>
 
@@ -124,13 +124,7 @@ export default function Header() {
             `}
           >
             <Link href="/collections" onClick={() => setMobileMenuOpen(false)}>
-              Gallery
-            </Link>
-            <Link href="/exhibitions" onClick={() => setMobileMenuOpen(false)}>
-              Exhibitions
-            </Link>
-            <Link href="/draw" onClick={() => setMobileMenuOpen(false)}>
-              Create a drawing
+              Work
             </Link>
             <Link href="/about" onClick={() => setMobileMenuOpen(false)}>
               About
