@@ -124,10 +124,10 @@ export default function Header() {
             `}
           >
             <Link href="/collections" onClick={() => setMobileMenuOpen(false)}>
-              Work
+              Colección
             </Link>
             <Link href="/about" onClick={() => setMobileMenuOpen(false)}>
-              About
+              Sobre nosotros
             </Link>
             <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
               Contact

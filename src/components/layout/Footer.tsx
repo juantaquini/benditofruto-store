@@ -12,13 +12,13 @@ export default function Footer() {
 
           <nav className="flex items-center gap-6">
             <Link href="/collections" className="text-sm text-foreground transition-colors hover:text-black">
-              Work
+              Colección
             </Link>
             <Link href="/about" className="text-sm text-foreground transition-colors hover:text-black">
-              About
+              Sobre nosotros
             </Link>
             <Link href="/contact" className="text-sm text-foreground transition-colors hover:text-black">
-              Contact
+              Contacto
             </Link>
           </nav>
         </div>
