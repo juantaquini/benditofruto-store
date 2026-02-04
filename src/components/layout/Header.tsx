@@ -60,13 +60,13 @@ export default function Header() {
             </Link>
             <nav className="hidden flex-1 justify-center md:flex">
               <Link className="px-4 py-2 font-medium" href="/collections">
-                Work
+                Colección
               </Link>
               <Link className="px-4 py-2 font-medium" href="/about">
-                About
+                Sobre nosotros
               </Link>
               <Link className="px-4 py-2 font-medium" href="/contact">
-                Contact
+                Contacto
               </Link>
             </nav>
 

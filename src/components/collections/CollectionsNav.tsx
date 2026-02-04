@@ -17,7 +17,7 @@ export default function CollectionsNav({
   showAll = false,
 }: Props) {
   const linkClass =
-    "inline-block whitespace-nowrap text-sm font-medium uppercase transition duration-200 px-4 py-2 rounded";
+    "inline-block whitespace-nowrap text-sm font-medium uppercase transition duration-200 py-2 rounded";
   const activeClass = "-translate-y-3";
 
   // ✅ Ordenar colecciones alfabéticamente por title
@@ -29,7 +29,7 @@ export default function CollectionsNav({
   const sortedTags = tags ? [...tags].sort((a, b) => a.localeCompare(b)) : [];
 
   return (
-    <nav className="flex overflow-x-auto py-8 scroll-smooth justify-start md:justify-center">
+    <nav className="flex flex-row md:flex-wrap gap-x-8 gap-y-2 overflow-x-auto md:overflow-visible md:pt-8 pt-4 scroll-smooth justify-start md:justify-center w-full">
       {/* Mode: List Collections */}
       {collections && (
         <>
@@ -37,7 +37,7 @@ export default function CollectionsNav({
             href="/collections"
             className={`${linkClass} ${showAll ? activeClass : ""}`}
           >
-            All
+            New In
           </Link>
 
           {sortedCollections.map(({ node }) => (
@@ -65,7 +65,7 @@ export default function CollectionsNav({
             href={`/collections/${collectionHandle}`}
             className={`${linkClass} ${!currentTag ? activeClass : ""}`}
           >
-            All
+            New In
           </Link>
 
           {sortedTags.map((tag) => (
