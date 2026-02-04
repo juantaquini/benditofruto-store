@@ -12,7 +12,7 @@ export default function Footer() {
 
           <nav className="flex items-center gap-6">
             <Link href="/collections" className="text-sm text-foreground transition-colors hover:text-black">
-              Colección
+              Productos
             </Link>
             <Link href="/about" className="text-sm text-foreground transition-colors hover:text-black">
               Sobre nosotros

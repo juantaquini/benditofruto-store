@@ -60,7 +60,7 @@ export default function Header() {
             </Link>
             <nav className="hidden flex-1 justify-center md:flex">
               <Link className="px-4 py-2 font-medium" href="/collections">
-                Colección
+                Productos
               </Link>
               <Link className="px-4 py-2 font-medium" href="/about">
                 Sobre nosotros
@@ -124,7 +124,7 @@ export default function Header() {
             `}
           >
             <Link href="/collections" onClick={() => setMobileMenuOpen(false)}>
-              Colección
+              Productos
             </Link>
             <Link href="/about" onClick={() => setMobileMenuOpen(false)}>
               Sobre nosotros
