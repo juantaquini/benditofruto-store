@@ -15,7 +15,7 @@ export default async function CollectionsPage() {
       <CollectionsNav collections={collections} showAll={true} />
       
       {/* Grid de productos */}
-      <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pt-8">
+      <div className="grid w-full grid-cols-2 gap-x-4 gap-y-8 pt-8 sm:gap-x-6 lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
         {products.map(({ node: product }) => (
           <ProductCard key={product.id} product={product} />
         ))}
