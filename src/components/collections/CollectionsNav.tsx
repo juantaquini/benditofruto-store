@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { NEW_IN_COLLECTION_HANDLE } from "@/lib/shopify";
 import type { ShopifyCollection } from "@/types/shopify";
 
 type Props = {
@@ -7,7 +8,6 @@ type Props = {
   tags?: string[];
   collectionHandle?: string;
   currentTag?: string;
-  showAll?: boolean;
 };
 
 export default function CollectionsNav({
@@ -15,7 +15,6 @@ export default function CollectionsNav({
   collectionHandle,
   // tags,
   // currentTag,
-  showAll = false,
 }: Props) {
   const linkClass =
     "inline-block whitespace-nowrap text-sm font-medium uppercase transition duration-200 py-2 rounded";
@@ -23,7 +22,9 @@ export default function CollectionsNav({
 
   // ✅ Ordenar colecciones alfabéticamente por title
   const sortedCollections = collections
-    ? [...collections].sort((a, b) => a.node.title.localeCompare(b.node.title))
+    ? [...collections]
+        .filter(({ node }) => node.handle !== NEW_IN_COLLECTION_HANDLE)
+        .sort((a, b) => a.node.title.localeCompare(b.node.title))
     : [];
 
   // const sortedTags = tags ? [...tags].sort((a, b) => a.localeCompare(b)) : [];
@@ -34,8 +35,10 @@ export default function CollectionsNav({
       {collections && (
         <>
           <Link
-            href="/collections"
-            className={`${linkClass} ${showAll ? activeClass : ""}`}
+            href={`/collections/${NEW_IN_COLLECTION_HANDLE}`}
+            className={`${linkClass} ${
+              collectionHandle === NEW_IN_COLLECTION_HANDLE ? activeClass : ""
+            }`}
           >
             New In
           </Link>
@@ -45,7 +48,7 @@ export default function CollectionsNav({
               key={node.id}
               href={`/collections/${node.handle}`}
               className={`${linkClass} ${
-                collectionHandle === node.handle && !showAll ? activeClass : ""
+                collectionHandle === node.handle ? activeClass : ""
               }`}
             >
               {node.title}

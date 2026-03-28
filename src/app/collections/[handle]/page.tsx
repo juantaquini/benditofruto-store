@@ -21,7 +21,6 @@ export default async function CollectionPage({ params }: Props) {
       <CollectionsNav
         collections={collections}
         collectionHandle={handle}
-        showAll={false}
       />
       <ProductGrid products={edges} />
     </div>

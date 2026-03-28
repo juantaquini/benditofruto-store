@@ -9,6 +9,10 @@ const token =
 
 const endpoint = `https://${domain}/api/2025-01/graphql.json`;
 
+/** Handle de la colección “New In” en Shopify. */
+export const NEW_IN_COLLECTION_HANDLE =
+  process.env.NEXT_PUBLIC_NEW_IN_COLLECTION_HANDLE ?? "new-in";
+
 /* -------------------------------------------------------------------------- */
 /*                                   FETCH                                    */
 /* -------------------------------------------------------------------------- */
