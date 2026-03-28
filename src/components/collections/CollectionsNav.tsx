@@ -3,6 +3,7 @@ import type { ShopifyCollection } from "@/types/shopify";
 
 type Props = {
   collections?: { node: ShopifyCollection }[];
+  /** Subcolecciones por tag + “Back” — desactivado por ahora */
   tags?: string[];
   collectionHandle?: string;
   currentTag?: string;
@@ -11,9 +12,9 @@ type Props = {
 
 export default function CollectionsNav({
   collections,
-  tags,
   collectionHandle,
-  currentTag,
+  // tags,
+  // currentTag,
   showAll = false,
 }: Props) {
   const linkClass =
@@ -25,8 +26,7 @@ export default function CollectionsNav({
     ? [...collections].sort((a, b) => a.node.title.localeCompare(b.node.title))
     : [];
 
-  // ✅ Ordenar tags alfabéticamente
-  const sortedTags = tags ? [...tags].sort((a, b) => a.localeCompare(b)) : [];
+  // const sortedTags = tags ? [...tags].sort((a, b) => a.localeCompare(b)) : [];
 
   return (
     <nav className="flex flex-row md:flex-wrap gap-x-8 gap-y-2 overflow-x-auto md:overflow-visible md:pt-8 pt-4 scroll-smooth justify-start md:justify-center w-full">
@@ -54,35 +54,37 @@ export default function CollectionsNav({
         </>
       )}
 
-      {/* Mode: List Tags (inside a collection) */}
-      {tags && collectionHandle && (
-        <>
-          <Link href="/collections" className={linkClass}>
-            Back
-          </Link>
-
-          <Link
-            href={`/collections/${collectionHandle}`}
-            className={`${linkClass} ${!currentTag ? activeClass : ""}`}
-          >
-            New In
-          </Link>
-
-          {sortedTags.map((tag) => (
-            <Link
-              key={tag}
-              href={`/collections/${collectionHandle}?tag=${encodeURIComponent(
-                tag
-              )}`}
-              className={`${linkClass} ${
-                currentTag === tag ? activeClass : ""
-              }`}
-            >
-              {tag}
+      {/*
+        Mode: List Tags (inside a collection) — subcolecciones por tab + Back
+        {tags && collectionHandle && (
+          <>
+            <Link href="/collections" className={linkClass}>
+              Back
             </Link>
-          ))}
-        </>
-      )}
+
+            <Link
+              href={`/collections/${collectionHandle}`}
+              className={`${linkClass} ${!currentTag ? activeClass : ""}`}
+            >
+              New In
+            </Link>
+
+            {sortedTags.map((tag) => (
+              <Link
+                key={tag}
+                href={`/collections/${collectionHandle}?tag=${encodeURIComponent(
+                  tag
+                )}`}
+                className={`${linkClass} ${
+                  currentTag === tag ? activeClass : ""
+                }`}
+              >
+                {tag}
+              </Link>
+            ))}
+          </>
+        )}
+      */}
     </nav>
   );
 }

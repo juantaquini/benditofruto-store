@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Container from "@/components/ui/Container";
 import {
   ShoppingBagIcon,
@@ -13,6 +14,9 @@ import CartPreview from "@/components/cart/CartPreview";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 
 export default function Header() {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
   const { totalQuantity, checkoutUrl, isCartOpen, openCart, closeCart } =
     useCart();
 
@@ -49,23 +53,33 @@ export default function Header() {
             <Link
               href="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="
+              className={`
                 absolute left-1/2 -translate-x-1/2
                 text-2xl font-medium tracking-widest
                 md:static md:translate-x-0 md:flex-1
                 z-40
-              "
+                ${isHome ? "md:text-white" : ""}
+              `}
             >
               Bendito Fruto
             </Link>
             <nav className="hidden flex-1 justify-center md:flex">
-              <Link className="px-4 py-2 font-medium" href="/collections">
+              <Link
+                className={`px-4 py-2 font-medium ${isHome ? "text-white hover:text-white/80" : ""}`}
+                href="/collections"
+              >
                 Productos
               </Link>
-              <Link className="px-4 py-2 font-medium" href="/about">
+              <Link
+                className={`px-4 py-2 font-medium ${isHome ? "text-white hover:text-white/80" : ""}`}
+                href="/about"
+              >
                 Sobre nosotros
               </Link>
-              <Link className="px-4 py-2 font-medium" href="/contact">
+              <Link
+                className={`px-4 py-2 font-medium ${isHome ? "text-white hover:text-white/80" : ""}`}
+                href="/contact"
+              >
                 Contacto
               </Link>
             </nav>
@@ -78,9 +92,21 @@ export default function Header() {
                 onMouseLeave={handleMouseLeave}
               >
                 <Link href="/cart" className="relative block">
-                  <ShoppingBagIcon className="h-6 w-6 text-foreground" />
+                  <ShoppingBagIcon
+                    className={
+                      isHome
+                        ? "h-6 w-6 text-[var(--foreground)] md:!text-white"
+                        : "h-6 w-6 text-foreground"
+                    }
+                  />
                   {totalQuantity > 0 && (
-                    <span className="absolute -right-1 -top-4 text-xs">
+                    <span
+                      className={
+                        isHome
+                          ? "absolute -right-1 -top-4 text-xs text-[var(--foreground)] md:!text-white"
+                          : "absolute -right-1 -top-4 text-xs"
+                      }
+                    >
                       {totalQuantity}
                     </span>
                   )}

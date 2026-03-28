@@ -1,35 +1,29 @@
-import { getCollectionByHandle } from "@/lib/shopify";
+import { getCollectionByHandle, getCollections } from "@/lib/shopify";
 import ProductGrid from "@/components/products/ProductGrid";
 import CollectionsNav from "@/components/collections/CollectionsNav";
 
 type Props = {
   params: Promise<{ handle: string }>;
-  searchParams?: Promise<{ tag?: string }>;
 };
 
-export default async function CollectionPage({ params, searchParams }: Props) {
+export default async function CollectionPage({ params }: Props) {
   const { handle } = await params;
-  const { tag } = (searchParams ? await searchParams : {}) as { tag?: string };
-  const data = await getCollectionByHandle(handle);
+  const [data, collectionsData] = await Promise.all([
+    getCollectionByHandle(handle),
+    getCollections(),
+  ]);
 
   const edges = data.collection.products.edges;
-
-  const tags = Array.from(
-    new Set(edges.flatMap(({ node }) => (node.tags ?? [])).filter(Boolean))
-  ).sort();
-
-  const filteredProducts = tag
-    ? edges.filter(({ node }) => (node.tags ?? []).includes(tag))
-    : edges;
+  const collections = collectionsData.collections?.edges ?? [];
 
   return (
     <div className="flex flex-col gap-12">
       <CollectionsNav
-        tags={tags}
+        collections={collections}
         collectionHandle={handle}
-        currentTag={tag}
+        showAll={false}
       />
-      <ProductGrid products={filteredProducts} />
+      <ProductGrid products={edges} />
     </div>
   );
 }

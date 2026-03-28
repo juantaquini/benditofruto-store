@@ -66,9 +66,15 @@ export default function CartItem({ item }: { item: any }) {
 
             {/* Dynamic stock messages */}
             {remaining <= 0 ? (
-              <span className="text-xs text-red-600">
-                No hay stock disponible
-              </span>
+              available === 1 ? (
+                <span className="text-xs text-neutral-600">
+                  Pieza única en stock
+                </span>
+              ) : available > 1 ? (
+                <span className="text-xs text-neutral-600">
+                  Ya tenés el máximo disponible
+                </span>
+              ) : null
             ) : remaining <= 5 ? (
               <span className="text-xs text-yellow-600">
                 Solo {remaining} unidad{remaining > 1 ? "es" : ""} restantes

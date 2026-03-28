@@ -30,27 +30,55 @@ export default async function ProductPage({ params }: Props) {
       .slice(0, RELATED_COUNT);
   }
 
+  const hasDimensions =
+    !!(
+      product.customWidth?.value?.trim() ||
+      product.customHeight?.value?.trim() ||
+      product.customDiameter?.value?.trim() ||
+      product.customCapacity?.value?.trim()
+    );
+
+  const dimensionLines = (
+    <>
+      {product.customWidth?.value?.trim() ? (
+        <p>Ancho: {product.customWidth.value}</p>
+      ) : null}
+      {product.customHeight?.value?.trim() ? (
+        <p>Alto: {product.customHeight.value}</p>
+      ) : null}
+      {product.customDiameter?.value?.trim() ? (
+        <p>Diametro: {product.customDiameter.value}</p>
+      ) : null}
+      {product.customCapacity?.value?.trim() ? (
+        <p>Capacidad: {product.customCapacity.value}</p>
+      ) : null}
+    </>
+  );
+
   return (
     <div className="grid md:grid-cols-1">
-      <div className="h-[auto] mt-20 md:mt-0 md:h-[85vh] overflow-x-scroll">
-        <div className="flex h-full gap-4 snap-x snap-mandatory">
-          {product.images.edges.map(({ node }) => (
-            <div
-              key={node.url}
-              className="relative shrink-0 w-full md:w-[min(70vh,600px)] aspect-square md:aspect-square max-h-[85vh] bg-white snap-center flex items-center justify-center"
-            >
-              <Image
-                src={node.url}
-                alt={node.altText ?? product.title}
-                fill
-                sizes="(max-width: 768px) 100vw, 600px"
-                className="object-contain p-2"
-              />
-            </div>
-          ))}
+      <div className="mx-auto w-full px-4 sm:px-6 lg:px-12 2xl:px-24 pt-24 md:mt-0 md:h-[85vh] md:pt-24 md:flex md:flex-col">
+        <div className="h-[auto] md:flex-1 md:min-h-0 overflow-x-scroll">
+          <div className="flex h-full snap-x snap-mandatory">
+            {product.images.edges.map(({ node }) => (
+              <div
+                key={node.url}
+                className="relative shrink-0 w-full md:w-auto h-full snap-center"
+              >
+                <Image
+                  src={node.url}
+                  alt={node.altText ?? product.title}
+                  width={node.width ?? 1200}
+                  height={node.height ?? 800}
+                  sizes="100vw"
+                  className="h-full w-full md:w-auto object-contain"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-      <Container className="px-4 flex flex-col justify-center items-center">
+      <Container className="flex flex-col justify-center items-center">
         <div className="h-[10vh] md:h-[15vh] w-full flex md:flex-row items-center justify-between">
           <div className="flex flex-col md:flex-row md:gap-4 md:flex-1 items-center">
             <h1 className="text-medium">{product.title}</h1>
@@ -64,9 +92,9 @@ export default async function ProductPage({ params }: Props) {
               {product.priceRange.minVariantPrice.currencyCode}
             </p>
           </div>
-          {product.customDimensions?.value && (
-            <div className="hidden md:block prose text-foreground text-neutral-600">
-              <p>{product.customDimensions.value}</p>
+          {hasDimensions && (
+            <div className="hidden md:flex md:flex-col md:text-center prose text-foreground text-neutral-600">
+              {dimensionLines}
             </div>
           )}
           <div className="flex md:flex-1 justify-end">
@@ -84,9 +112,9 @@ export default async function ProductPage({ params }: Props) {
         </div>
         <div className="flex flex-col gap-8 align-center">
           <div className="flex flex-col max-w-[500px] text-center gap-8">
-            {product.customDimensions?.value && (
-              <div className="md:hidden text-foreground text-neutral-600">
-                <p>{product.customDimensions.value}</p>
+            {hasDimensions && (
+              <div className="md:hidden flex flex-col text-foreground text-neutral-600">
+                {dimensionLines}
               </div>
             )}
             <div

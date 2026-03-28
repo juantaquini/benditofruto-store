@@ -147,7 +147,10 @@ export async function getProductByHandle(handle: string) {
           };
         }[];
       };
-      customDimensions: { value: string } | null;
+      customWidth: { value: string } | null;
+      customHeight: { value: string } | null;
+      customDiameter: { value: string } | null;
+      customCapacity: { value: string } | null;
       customCareInstructions: { value: string } | null;
       collections: {
         edges: { node: { handle: string } }[];
@@ -188,7 +191,16 @@ export async function getProductByHandle(handle: string) {
               }
             }
           }
-          customDimensions: metafield(namespace: "custom", key: "dimensions") {
+          customWidth: metafield(namespace: "custom", key: "width") {
+            value
+          }
+          customHeight: metafield(namespace: "custom", key: "height") {
+            value
+          }
+          customDiameter: metafield(namespace: "custom", key: "diameter") {
+            value
+          }
+          customCapacity: metafield(namespace: "custom", key: "capacity") {
             value
           }
           customCareInstructions: metafield(namespace: "custom", key: "care_instructions") {
@@ -225,7 +237,7 @@ export async function getProductByHandle(handle: string) {
 /* -------------------------------------------------------------------------- */
 
 export async function getCollections() {
-  return shopifyFetch<{
+  const data = await shopifyFetch<{
     collections: {
       edges: {
         node: {
@@ -233,6 +245,9 @@ export async function getCollections() {
           title: string;
           handle: string;
           descriptionHtml: string;
+          products: {
+            edges: { node: { id: string } }[];
+          };
         };
       }[];
     };
@@ -246,12 +261,36 @@ export async function getCollections() {
               title
               handle
               descriptionHtml
+              products(first: 1, filters: [{ available: true }]) {
+                edges {
+                  node {
+                    id
+                  }
+                }
+              }
             }
           }
         }
       }
     `,
   });
+
+  const edges = (data.collections?.edges ?? []).filter(
+    ({ node }) => node.products.edges.length > 0
+  );
+
+  return {
+    collections: {
+      edges: edges.map(({ node }) => ({
+        node: {
+          id: node.id,
+          title: node.title,
+          handle: node.handle,
+          descriptionHtml: node.descriptionHtml,
+        },
+      })),
+    },
+  };
 }
 
 
