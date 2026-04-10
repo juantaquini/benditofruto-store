@@ -1,4 +1,5 @@
 import { useCart } from "@/context/CartContext";
+import { resolveCartLineImageUrl } from "@/lib/cartLineImage";
 import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 
@@ -6,6 +7,7 @@ export default function CartItem({ item }: { item: any }) {
   const { updateItem, removeItem } = useCart();
   const variant = item.node.merchandise;
   const quantity = item.node.quantity;
+  const imageSrc = resolveCartLineImageUrl(item);
   const available = variant.quantityAvailable ?? 0;
   const remaining = available - quantity;
 
@@ -27,12 +29,18 @@ export default function CartItem({ item }: { item: any }) {
   return (
     <div className="flex gap-4 py-4 border-b border-foreground">
       <div className="relative w-24 h-24 flex-shrink-0 bg-white border border-neutral-200 overflow-hidden">
-        <Image
-          src={variant.image?.url}
-          alt={variant.image?.altText || variant.product.title}
-          fill
-          className="object-contain"
-        />
+        {imageSrc ? (
+          <Image
+            src={imageSrc}
+            alt={variant.image?.altText || variant.product.title}
+            fill
+            className="object-contain"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-neutral-100 text-xs text-neutral-500">
+            Sin imagen
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center flex-1">

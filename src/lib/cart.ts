@@ -1,4 +1,5 @@
 import { shopifyFetch } from "./shopify";
+import { CART_PREVIEW_IMAGE_ATTR_KEY } from "./cartLineImage";
 
 /* -------------------------------------------------------------------------- */
 /*                                 CREATE CART                                */
@@ -30,7 +31,26 @@ export async function createCart() {
 /*                                 ADD TO CART                                */
 /* -------------------------------------------------------------------------- */
 
-export async function addToCart(cartId: string, variantId: string) {
+export async function addToCart(
+  cartId: string,
+  variantId: string,
+  previewImageUrl?: string | null
+) {
+  const line: {
+    merchandiseId: string;
+    quantity: number;
+    attributes?: { key: string; value: string }[];
+  } = {
+    merchandiseId: variantId,
+    quantity: 1,
+  };
+
+  if (previewImageUrl?.trim()) {
+    line.attributes = [
+      { key: CART_PREVIEW_IMAGE_ATTR_KEY, value: previewImageUrl.trim() },
+    ];
+  }
+
   return shopifyFetch({
     query: `
       mutation AddToCart($cartId: ID!, $lines: [CartLineInput!]!) {
@@ -43,7 +63,7 @@ export async function addToCart(cartId: string, variantId: string) {
     `,
     variables: {
       cartId,
-      lines: [{ merchandiseId: variantId, quantity: 1 }],
+      lines: [line],
     },
   });
 }
@@ -110,6 +130,7 @@ export async function getCart(cartId: string) {
           node: {
             id: string;
             quantity: number;
+            attributes: { key: string; value: string }[];
             merchandise: {
               id: string;
               title: string;
@@ -141,6 +162,10 @@ export async function getCart(cartId: string) {
               node {
                 id
                 quantity
+                attributes {
+                  key
+                  value
+                }
                 merchandise {
                   ... on ProductVariant {
                     id

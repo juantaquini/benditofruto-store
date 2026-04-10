@@ -24,7 +24,10 @@ type CartContextType = {
   isCartOpen: boolean;
   openCart: () => void;
   closeCart: (delay?: number) => void;
-  addItem: (variantId: string) => Promise<void>;
+  addItem: (
+    variantId: string,
+    options?: { previewImageUrl?: string | null }
+  ) => Promise<void>;
   updateItem: (lineId: string, quantity: number) => Promise<void>;
   removeItem: (lineId: string) => Promise<void>;
   fetchCart: () => Promise<void>;
@@ -106,10 +109,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }
 
   /* ------------------------------ ADD ITEM ------------------------------- */
-  async function addItem(variantId: string) {
+  async function addItem(
+    variantId: string,
+    options?: { previewImageUrl?: string | null }
+  ) {
     if (!cartId) return;
 
-    await addToCart(cartId, variantId);
+    await addToCart(cartId, variantId, options?.previewImageUrl);
     await fetchCart();
     openCart();
     closeCart(5000);

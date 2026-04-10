@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { useCart } from "@/context/CartContext";
+import { resolveCartLineImageUrl } from "@/lib/cartLineImage";
 
 export default function CartPreview() {
   const { lines, updateItem, removeItem, checkoutUrl } = useCart();
@@ -23,13 +24,14 @@ export default function CartPreview() {
           const variant = item.node.merchandise;
           const quantity = item.node.quantity;
           const available = variant.quantityAvailable ?? 0;
+          const lineImageSrc = resolveCartLineImageUrl(item);
 
           return (
             <div key={item.node.id} className="flex gap-3 py-3">
               {/* Product Image */}
               <div className="relative w-20 h-20 flex-shrink-0 bg-white border border-neutral-200">
                 <Image
-                  src={variant.image?.url || "/placeholder.png"}
+                  src={lineImageSrc || "/placeholder.png"}
                   alt={variant.product.title}
                   fill
                   className="object-contain"

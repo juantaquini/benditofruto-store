@@ -1,3 +1,5 @@
+import { hexFromMetaobjectColorField } from "@/lib/colorMetaobject";
+
 const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN!;
 
 // Server: use private token (SHOPIFY_STOREFRONT_TOKEN). Client: use public token (NEXT_PUBLIC_).
@@ -115,9 +117,6 @@ export async function getProducts() {
 /* -------------------------------------------------------------------------- */
 
 export async function getProductByHandle(handle: string) {
-  console.log("🟡 getProductByHandle CALLED");
-  console.log("➡️ handle recibido:", handle);
-
   const data = await shopifyFetch<{
     product: {
       id: string;
@@ -141,6 +140,10 @@ export async function getProductByHandle(handle: string) {
           };
         }[];
       };
+      options: {
+        name: string;
+        values: string[];
+      }[];
       variants: {
         edges: {
           node: {
@@ -148,6 +151,24 @@ export async function getProductByHandle(handle: string) {
             title: string;
             availableForSale: boolean;
             quantityAvailable: number;
+            selectedOptions: {
+              name: string;
+              value: string;
+            }[];
+            image: {
+              url: string;
+            } | null;
+            price: {
+              amount: string;
+            };
+            metafield: {
+              reference: {
+                fields: {
+                  key: string;
+                  value: string | null;
+                }[];
+              } | null;
+            } | null;
           };
         }[];
       };
@@ -175,7 +196,7 @@ export async function getProductByHandle(handle: string) {
               currencyCode
             }
           }
-          images(first: 5) {
+          images(first: 50) {
             edges {
               node {
                 url
@@ -185,6 +206,10 @@ export async function getProductByHandle(handle: string) {
               }
             }
           }
+          options {
+            name
+            values
+          }
           variants(first: 10) {
             edges {
               node {
@@ -192,6 +217,26 @@ export async function getProductByHandle(handle: string) {
                 title
                 availableForSale
                 quantityAvailable
+                selectedOptions {
+                  name
+                  value
+                }
+                image {
+                  url
+                }
+                price {
+                  amount
+                }
+                metafield(namespace: "custom", key: "color") {
+                  reference {
+                    ... on Metaobject {
+                      fields {
+                        key
+                        value
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -223,18 +268,97 @@ export async function getProductByHandle(handle: string) {
     variables: { handle },
   });
 
-  console.log("📦 respuesta cruda de Shopify:", data);
-  console.log("📦 product:", data?.product);
-
-  if (!data?.product) {
-    console.warn("❌ PRODUCT NULL para handle:", handle);
-  } else {
-    console.log("✅ PRODUCT OK:", data.product.title);
-  }
-
   return data;
 }
 
+/* -------------------------------------------------------------------------- */
+/*                              COLOR METAOBJECTS                              */
+/* -------------------------------------------------------------------------- */
+
+export const COLOR_METAOBJECTS_QUERY = `
+  query ColorMetaobjects($type: String!, $first: Int!) {
+    metaobjects(type: $type, first: $first) {
+      edges {
+        node {
+          id
+          handle
+          fields {
+            key
+            value
+          }
+        }
+      }
+    }
+  }
+`;
+
+type ColorMetaobjectNode = {
+  id: string;
+  handle: string;
+  fields: { key: string; value: string | null }[];
+};
+
+export type ShopifyColor = {
+  handle: string;
+  label: string;
+  hex: string;
+};
+
+const COLOR_METAOBJECT_TYPE =
+  process.env.NEXT_PUBLIC_SHOPIFY_COLOR_METAOBJECT_TYPE ??
+  "shopify--color-pattern";
+
+export async function getColorMetaobjects(first = 50) {
+  const data = await shopifyFetch<{
+    metaobjects: {
+      edges: {
+        node: ColorMetaobjectNode;
+      }[];
+    };
+  }>({
+    query: COLOR_METAOBJECTS_QUERY,
+    variables: { type: COLOR_METAOBJECT_TYPE, first },
+  });
+
+  return (data.metaobjects?.edges ?? []).map(({ node }) => {
+    const label =
+      node.fields.find((field) => field.key === "label")?.value ?? "";
+    const rawColor = node.fields.find((field) => field.key === "color")?.value;
+    const hex = hexFromMetaobjectColorField(rawColor);
+
+    return {
+      handle: node.handle,
+      label,
+      hex,
+    };
+  });
+}
+export function toShopifyHandle(value: string) {
+  return value.trim().toLowerCase().replace(/\s+/g, "-");
+}
+
+export function getVariantColor(
+  variant: {
+    id?: string;
+    title?: string;
+    selectedOptions?: { name: string; value: string }[];
+  },
+  colors: ShopifyColor[]
+) {
+  const colorOption = (variant.selectedOptions ?? []).find(
+    (option) => option.name.toLowerCase() === "color"
+  );
+
+  const normalizedHandle = colorOption?.value
+    ? toShopifyHandle(colorOption.value)
+    : null;
+
+  const matchedColor = normalizedHandle
+    ? colors.find((color) => color.handle === normalizedHandle) ?? null
+    : null;
+
+  return matchedColor;
+}
 
 /* -------------------------------------------------------------------------- */
 /*                               GET COLLECTIONS                              */

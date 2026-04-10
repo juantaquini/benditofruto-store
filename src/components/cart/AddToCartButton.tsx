@@ -3,12 +3,21 @@
 import { useCart } from "@/context/CartContext";
 import { PlusIcon } from "@heroicons/react/24/outline";
 
-export default function AddToCartButton({ variantId }: { variantId: string }) {
+export default function AddToCartButton({
+  variantId,
+  cartPreviewImageUrl,
+}: {
+  variantId: string;
+  /** Primera imagen visible de la galería (color seleccionado) para el carrito. */
+  cartPreviewImageUrl?: string | null;
+}) {
   const { addItem } = useCart();
 
   return (
     <button
-      onClick={() => addItem(variantId)}
+      onClick={() =>
+        addItem(variantId, { previewImageUrl: cartPreviewImageUrl })
+      }
       className="bg-foreground px-4 py-1 text-white cursor-pointer flex items-center gap-2"
     >
       <div className="md:hidden flex items-center gap-2">
